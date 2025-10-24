@@ -27,8 +27,8 @@
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="org.postgresql.Driver"/>
         <property name="url" value="jdbc:postgresql://localhost:5432/cinehub_db"/>
-        <property name="username" value="cinehub_user"/>
-        <property name="password" value="cinehub_password"/>
+        <property name="username" value="user"/>
+        <property name="password" value="cpass"/>
     </bean>
 
     <!-- Configuration de l'EntityManagerFactory -->
@@ -63,7 +63,6 @@
     <!-- Activation de Spring Data JPA -->
     <jpa:repositories base-package="com.cinhub.repository"/>
 
-    <!-- Exemples de Beans avec différents Scopes -->
 
     <!-- Bean Singleton (par défaut) - une seule instance pour toute l'application -->
     <bean id="filmService" class="com.cinhub.service.FilmService" scope="singleton">

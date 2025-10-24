@@ -1,12 +1,12 @@
 services:
-  # === MySql Database ===
+  # === MySQL Database ===
   mysql:
     image: mysql:8.0
     container_name: cinehub-mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: cinhub_db
+      MYSQL_DATABASE: cinehub_db
       MYSQL_USER: user
       MYSQL_PASSWORD: cpass
     ports:
@@ -17,29 +17,15 @@ services:
     networks:
       - cinehub-network
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
-      timeout: 20s
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u$$MYSQL_USER -p$$MYSQL_PASSWORD"]
+      interval: 10s
+      timeout: 5s
       retries: 10
-
-  # === pgAdmin (Web Interface for PostgreSQL) ===
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: spring_pgadmin
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ad@ad.com
-      PGADMIN_DEFAULT_PASSWORD: ad
-    ports:
-      - "5050:80"
-    depends_on:
-      - postgres
-    volumes:
-      - pgadmin_data:/var/lib/pgadmin
 
   # === Tomcat for Spring Core App ===
   tomcat:
     image: tomcat:10-jdk17-temurin
-    container_name: spring_tomcat
+    container_name: cinehub-tomcat
     restart: always
     ports:
       - "8080:8080"
@@ -47,8 +33,14 @@ services:
       # Mount your WAR or webapp directory here
       - ./target:/usr/local/tomcat/webapps
     depends_on:
-      - postgres
+      mysql:
+        condition: service_healthy
+    networks:
+      - cinehub-network
 
 volumes:
-  postgres_data:
-  pgadmin_data:
+  mysql_data:
+
+networks:
+  cinehub-network:
+    driver: bridge

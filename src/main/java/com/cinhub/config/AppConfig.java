@@ -2,7 +2,7 @@ package com.cinhub.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import jakarta.persistence.EntityManagerFactory;
+import javax.persistence.EntityManagerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -41,10 +41,10 @@ public class AppConfig {
     @Bean
     public DataSource dataSource() {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(env.getProperty("db.url", "jdbc:mysql://localhost:3306/cinehub_db"));
-        config.setUsername(env.getProperty("db.username", "root"));
-        config.setPassword(env.getProperty("db.password", ""));
-        config.setDriverClassName(env.getProperty("db.driver", "com.mysql.cj.jdbc.Driver"));
+        config.setJdbcUrl(env.getProperty("spring.datasource.url", "jdbc:mysql://localhost:3306/cinhub_db?useSSL=false&serverTimezone=UTC"));
+        config.setUsername(env.getProperty("spring.datasource.username", "root"));
+        config.setPassword(env.getProperty("spring.datasource.password", ""));
+        config.setDriverClassName(env.getProperty("spring.datasource.driver-class-name", "com.mysql.cj.jdbc.Driver"));
 
         // Configuration du pool
         config.setMaximumPoolSize(10);
@@ -63,7 +63,7 @@ public class AppConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
-        em.setPackagesToScan("com.cinehub.entity");
+        em.setPackagesToScan("com.cinhub.entity");
 
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
@@ -87,10 +87,10 @@ public class AppConfig {
      */
     private Properties hibernateProperties() {
         Properties properties = new Properties();
-        properties.put("hibernate.dialect", env.getProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect"));
-        properties.put("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto", "update"));
-        properties.put("hibernate.show_sql", env.getProperty("hibernate.show_sql", "true"));
-        properties.put("hibernate.format_sql", env.getProperty("hibernate.format_sql", "true"));
+        properties.put("hibernate.dialect", env.getProperty("spring.jpa.properties.hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect"));
+        properties.put("hibernate.hbm2ddl.auto", env.getProperty("spring.jpa.hibernate.ddl-auto", "update"));
+        properties.put("hibernate.show_sql", env.getProperty("spring.jpa.show-sql", "true"));
+        properties.put("hibernate.format_sql", env.getProperty("spring.jpa.properties.hibernate.format_sql", "true"));
         properties.put("hibernate.use_sql_comments", "true");
         return properties;
     }
