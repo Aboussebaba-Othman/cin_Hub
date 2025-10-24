@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/tx
+           http://www.springframework.org/schema/tx/spring-tx.xsd
+           http://www.springframework.org/schema/data/jpa
+           http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+
+    <!-- Activation du Component Scanning -->
+    <context:component-scan base-package="com.cinhub"/>
+
+    <!-- Activation des annotations (@Transactional, @Repository, etc.) -->
+    <context:annotation-config/>
+
+    <!-- Chargement des propriétés -->
+    <context:property-placeholder location="classpath:application.properties"/>
+
+    <!-- Configuration de la DataSource -->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="org.postgresql.Driver"/>
+        <property name="url" value="jdbc:postgresql://localhost:5432/cinehub_db"/>
+        <property name="username" value="cinehub_user"/>
+        <property name="password" value="cinehub_password"/>
+    </bean>
+
+    <!-- Configuration de l'EntityManagerFactory -->
+    <bean id="entityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="com.cinhub.entity"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="showSql" value="true"/>
+                <property name="generateDdl" value="true"/>
+            </bean>
+        </property>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.format_sql">true</prop>
+                <prop key="hibernate.show_sql">true</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- Configuration du TransactionManager -->
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <!-- Activation de la gestion des transactions par annotations -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!-- Activation de Spring Data JPA -->
+    <jpa:repositories base-package="com.cinhub.repository"/>
+
+    <!-- Exemples de Beans avec différents Scopes -->
+
+    <!-- Bean Singleton (par défaut) - une seule instance pour toute l'application -->
+    <bean id="filmService" class="com.cinhub.service.FilmService" scope="singleton">
+        <constructor-arg ref="filmRepository"/>
+        <constructor-arg ref="directorRepository"/>
+        <constructor-arg ref="categoryRepository"/>
+        <constructor-arg ref="filmMapper"/>
+    </bean>
+
+    <!-- Bean Prototype - nouvelle instance à chaque demande -->
+    <bean id="filmMapper" class="com.cinhub.mapper.FilmMapper" scope="prototype">
+        <constructor-arg ref="directorMapper"/>
+        <constructor-arg ref="categoryMapper"/>
+    </bean>
+
+</beans>
