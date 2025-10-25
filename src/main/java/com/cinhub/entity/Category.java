@@ -1,8 +1,8 @@
 package com.cinhub.entity;
 
 import javax.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -20,6 +20,7 @@ public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_category")
     private Long idCategory;
 
     @NotBlank(message = "Le nom de la catégorie est obligatoire")

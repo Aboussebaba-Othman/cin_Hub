@@ -1,7 +1,7 @@
 package com.cinhub.entity;
 
 import javax.persistence.*;
-import jakarta.validation.constraints.*;
+import javax.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -17,6 +17,7 @@ public class Film {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_film")
     private Long idFilm;
 
     @NotBlank(message = "Le titre est obligatoire")
@@ -27,7 +28,7 @@ public class Film {
     @NotNull(message = "L'année de sortie est obligatoire")
     @Min(value = 1888, message = "L'année de sortie ne peut pas être avant 1888")
     @Max(value = 2100, message = "L'année de sortie ne peut pas être dans le futur")
-    @Column(nullable = false)
+    @Column(name = "release_year", nullable = false)
     private Integer releaseYear;
 
     @NotNull(message = "La durée est obligatoire")

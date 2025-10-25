@@ -1,7 +1,9 @@
 package com.cinhub.mapper;
+
+
 import org.springframework.stereotype.Component;
 
 @Component
-public class FilmMapper {
+public class CategoryMapper {
 
 }

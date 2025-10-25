@@ -24,14 +24,14 @@ services:
 
   # === Tomcat for Spring Core App ===
   tomcat:
-    image: tomcat:10-jdk17-temurin
+    image: tomcat:9-jdk17-temurin
     container_name: cinehub-tomcat
     restart: always
     ports:
       - "8080:8080"
     volumes:
-      # Mount your WAR or webapp directory here
-      - ./target:/usr/local/tomcat/webapps
+      # Mount ONLY the WAR file, not the entire target directory
+      - ./target/cinehub.war:/usr/local/tomcat/webapps/cinehub.war
     depends_on:
       mysql:
         condition: service_healthy

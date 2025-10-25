@@ -1,9 +1,9 @@
 package com.cinhub.entity;
 
 import javax.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Size;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -21,16 +21,17 @@ public class Director {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_director")
     private Long idDirector;
 
     @NotBlank(message = "Le prénom est obligatoire")
     @Size(min = 2, max = 100, message = "Le prénom doit contenir entre 2 et 100 caractères")
-    @Column(nullable = false)
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
     @NotBlank(message = "Le nom est obligatoire")
     @Size(min = 2, max = 100, message = "Le nom doit contenir entre 2 et 100 caractères")
-    @Column(nullable = false)
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
     @NotBlank(message = "La nationalité est obligatoire")
@@ -39,7 +40,7 @@ public class Director {
     private String nationality;
 
     @Past(message = "La date de naissance doit être dans le passé")
-    @Column(nullable = false)
+    @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
     @Column(columnDefinition = "TEXT")
